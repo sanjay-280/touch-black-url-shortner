@@ -1,4 +1,3 @@
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <h1>URL Shortener</h1>
 
@@ -11,21 +10,19 @@
   <div>
     <button type="button" onclick="shortenUrl()">Shorten URL</button>
   </div>
-
-  <div>
 <% end %>
 
 <div class="shortened">
   <br/>
   <span id="message"></span>
-  <a id="shortened_url"></a>
+  <a id="shortened_url" target="_blank"></a>
 </div>
 
 
 <script>
     const shortenUrl = () => {
         const originalUrl = $("#url_original_url").val();
-        if(originalUrl === "") {
+        if (originalUrl === "") {
             alert("Please enter a URL to shorten");
             return;
         }
@@ -38,10 +35,10 @@
             data: {
                 original_url: originalUrl
             },
-            success: function(response) {
+            success: function (response) {
                 $('#message').text("");
                 $('#shortened_url').text("");
-                if(response.short_url) {
+                if (response.short_url) {
                     $('#shortened_url').attr('href', response.short_url).text(response.short_url);
                     $('.shortened').show();
                     $('#message').text(response.message);
@@ -50,7 +47,7 @@
                     $('#message').text(response.message);
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 alert("Error: " + error);
             }
         });
