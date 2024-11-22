@@ -8,9 +8,9 @@ class UrlsController < ApiController
 	def create
 		@url = Url.create_url(url_params["original_url"])
 		if @url[:created]
-			render json: { short_url: "#{request.base_url}/#{@url[:short_url]}", message: @url[:message] }
+			render json: { short_url: "#{request.base_url}/url/#{@url[:short_url]}", message: @url[:message] }
 		else
-			short_url = @url[:short_url].present? ? "#{request.base_url}/#{@url[:short_url]}" : nil
+			short_url = @url[:short_url].present? ? "#{request.base_url}/url/#{@url[:short_url]}" : nil
 			render json: { short_url: short_url, message: @url[:message] }
 		end
 	end

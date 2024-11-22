@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: URL Shortener API
+  description: API for creating and redirecting shortened URLs.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Development Server
+paths:
+  /urls/new:
+    get:
+      summary: Get a new URL object template
+      description: Fetch a blank template for a new URL object.
+      responses:
+        '200':
+          description: A new URL object template
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  original_url:
+                    type: string
+                  short_url:
+                    type: string
+                example:
+                  id: ""
+                  original_url: ""
+                  short_url: ""
+
+  /urls/create:
+    post:
+      summary: Create a shortened URL
+      description: Shorten a provided original URL.
+      security:
+        - ApiTokenAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                original_url:
+                  type: string
+                  example: "https://example.com"
+      responses:
+        '200':
+          description: Successfully shortened the URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  short_url:
+                    type: string
+                    example: "http://localhost:3000/url/abc123"
+                  message:
+                    type: string
+                example:
+                  short_url: "http://localhost:3000/url/abc123"
+                  message: "URL shortened successfully"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+  /url/{short_url}:
+    get:
+      summary: Redirect to the original URL
+      description: Redirect the user to the original URL using the shortened URL code.
+      parameters:
+        - name: short_url
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The shortened URL code
+          example: "abc123"
+      responses:
+        '302':
+          description: Redirect to the original URL
+        '404':
+          description: URL not found
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "URL not found"
+
+components:
+  securitySchemes:
+    ApiTokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization

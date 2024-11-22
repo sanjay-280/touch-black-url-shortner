@@ -68,3 +68,6 @@ group :test do
 end
 
 gem 'dotenv-rails'
+gem 'rswag-api'
+gem 'rswag-ui'
+gem 'rack-cors'

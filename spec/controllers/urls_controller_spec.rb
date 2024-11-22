@@ -47,7 +47,7 @@ RSpec.describe UrlsController, type: :controller do
 				expect(response).to have_http_status(:ok)
 				json_response = JSON.parse(response.body)
 				expect(json_response["message"]).to eq("Short URL already exists")
-				expect(json_response["short_url"]).to eq("http://test.host/abc123")
+				expect(json_response["short_url"]).to eq("http://test.host/url/abc123")
 			end
 		end
 	end
