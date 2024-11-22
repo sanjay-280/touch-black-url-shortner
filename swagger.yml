@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  title: URL Shortener API
+  description: API for creating and redirecting shortened URLs.
+  version: 1.0.0
+paths:
+  /urls/new:
+    get:
+      summary: Create a new URL object
+      description: Initializes a new URL object. Typically used by front-end applications.
+      responses:
+        '200':
+          description: Returns an empty URL object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: object
+                    description: An empty URL object.
+
+  /urls:
+    post:
+      summary: Create a shortened URL
+      description: Accepts an original URL and returns a shortened URL.
+      security:
+        - ApiKeyAuth: []  # This indicates the need for an API token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                original_url:
+                  type: string
+                  description: The original URL to be shortened.
+                  example: "https://example.com"
+      responses:
+        '200':
+          description: URL successfully shortened.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  short_url:
+                    type: string
+                    description: The shortened URL.
+                    example: "http://localhost/abc123"
+                  message:
+                    type: string
+                    description: A message indicating the result of the operation.
+        '400':
+          description: Invalid URL or request data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  short_url:
+                    type: string
+                    description: The shortened URL if it already exists.
+                    example: "http://localhost/abc123"
+                  message:
+                    type: string
+                    description: A message indicating the result of the operation.
+
+  /urls/{short_url}:
+    get:
+      summary: Redirect to the original URL
+      description: Redirects the user to the original URL based on the shortened URL.
+      parameters:
+        - name: short_url
+          in: path
+          required: true
+          description: The shortened URL identifier.
+          schema:
+            type: string
+            example: "abc123"
+      responses:
+        '302':
+          description: Redirects to the original URL.
+          headers:
+            Location:
+              description: The URL to which the client is redirected.
+              schema:
+                type: string
+        '404':
+          description: Shortened URL not found.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "URL not found"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: Authorization
+      in: header
